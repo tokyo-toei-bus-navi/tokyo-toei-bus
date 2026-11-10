@@ -629,15 +629,62 @@
     let selectedTripId = null;
 
     let activeRoutePolyline = null;
-    let activeTripMarkers = [];
+        let activeTripMarkers = [];
+    let currentArea = '23';
+
+    function getUrlParams() {
+      const sp = new URLSearchParams(window.location.search);
+      return {
+        area: sp.get('area') || '23',
+        stop: sp.get('stop') || null,
+        route: sp.get('route') || null,
+        trip: sp.get('trip') || null
+      };
+    }
+
+    function updateUrlParams(stopId = null, routeId = null, tripId = null) {
+      const sp = new URLSearchParams();
+      sp.set('area', currentArea);
+      if (stopId) {
+        sp.set('stop', stopId);
+        if (routeId) {
+          sp.set('route', routeId);
+          if (tripId) {
+            sp.set('trip', tripId);
+          }
+        }
+      }
+      const newUrl = window.location.pathname + '?' + sp.toString();
+      if (window.location.search !== '?' + sp.toString()) {
+        window.history.pushState({ area: currentArea, stop: stopId, route: routeId, trip: tripId }, '', newUrl);
+      }
+    }
+
+    async function applyUrlState() {
+      const params = getUrlParams();
+      if (params.stop && metadata && metadata.stops && metadata.stops[params.stop]) {
+        await onSelectStop(params.stop, false, true);
+        if (params.route && metadata.routes && metadata.routes[params.route]) {
+          await onSelectRoute(params.route, false, true);
+          if (params.trip) {
+            onSelectTrip(params.trip, true);
+          }
+        }
+      }
+    }
+
 
     // Initialize Map with GSI Tiles
     function initMap() {
-      // Tokyo central coordinates
+      // Initial center based on area
+      const isTama = getUrlParams().area === 'tama';
+      const initialCenter = isTama ? [35.7900, 139.2600] : [35.681236, 139.767125];
+      const initialZoom = isTama ? 12 : 13;
+
       map = L.map('map', {
-        center: [35.681236, 139.767125],
-        zoom: 13,
-        minZoom: 10,
+        center: initialCenter,
+        zoom: initialZoom,
+        minZoom: 9,
         maxZoom: 18
       });
 
@@ -1207,6 +1254,10 @@
     }
 
     // Initialize application on page load
+        window.addEventListener('popstate', (e) => {
+      applyUrlState();
+    });
+
     window.addEventListener('DOMContentLoaded', () => {
       initMap();
       loadData();
