@@ -15,12 +15,45 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
+      background-color: #ffffff;
+      color: #1a202c;
+    }
+
+    /* 常時表示お知らせバナー */
+    .notice-banner {
+      width: 100%;
+      background-color: #ebf8ff;
+      border-bottom: 1px solid #bee3f8;
+      color: #2b6cb0;
+      padding: 10px 16px;
+      font-size: 13px;
+      line-height: 1.5;
+      display: flex;
       align-items: center;
       justify-content: center;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
-      background: linear-gradient(135deg, #0d3b66 0%, #001e3d 100%);
-      color: #ffffff;
-      padding: 24px;
+      gap: 8px;
+      text-align: center;
+      font-weight: 500;
+    }
+
+    .notice-banner .icon {
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .notice-banner strong {
+      color: #2c5282;
+      font-weight: 700;
+    }
+
+    /* メインコンテンツエリア */
+    .main-wrapper {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
     }
 
     .container {
@@ -43,14 +76,14 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(8px);
+      background: #edf2f7;
+      color: #2b6cb0;
       padding: 6px 16px;
       border-radius: 20px;
       font-size: 13px;
       font-weight: 600;
       letter-spacing: 0.5px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      border: 1px solid #e2e8f0;
     }
 
     h1 {
@@ -58,12 +91,13 @@
       font-weight: 800;
       letter-spacing: -0.5px;
       line-height: 1.3;
+      color: #1a202c;
     }
 
     .sub-title {
       font-size: 15px;
-      color: #cbd5e0;
-      max-width: 540px;
+      color: #4a5568;
+      max-width: 580px;
       line-height: 1.6;
     }
 
@@ -75,9 +109,8 @@
     }
 
     .area-card {
-      background: rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: #ffffff;
+      border: 2px solid #e2e8f0;
       border-radius: 20px;
       padding: 32px 24px;
       text-align: left;
@@ -89,14 +122,13 @@
       gap: 16px;
       transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
-      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     }
 
     .area-card:hover {
       transform: translateY(-6px);
-      background: rgba(255, 255, 255, 0.14);
-      border-color: rgba(255, 255, 255, 0.35);
-      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
+      border-color: #3182ce;
+      box-shadow: 0 12px 28px rgba(49, 130, 206, 0.15);
     }
 
     .area-card-icon {
@@ -107,12 +139,14 @@
       width: 64px;
       height: 64px;
       border-radius: 16px;
-      background: rgba(255, 255, 255, 0.12);
+      background: #ebf8ff;
+      border: 1px solid #bee3f8;
     }
 
     .area-card-title {
       font-size: 22px;
       font-weight: 700;
+      color: #1a202c;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -120,21 +154,21 @@
 
     .area-card-badge {
       font-size: 12px;
-      padding: 3px 8px;
+      padding: 4px 10px;
       border-radius: 6px;
       background: #3182ce;
-      color: white;
+      color: #ffffff;
       font-weight: 600;
     }
 
     .area-card.tama .area-card-badge {
-      background: #38a169;
+      background: #2b6cb0;
     }
 
     .area-card-desc {
       font-size: 14px;
-      color: #e2e8f0;
-      line-height: 1.5;
+      color: #4a5568;
+      line-height: 1.6;
     }
 
     .area-card-stats {
@@ -142,14 +176,14 @@
       gap: 16px;
       margin-top: auto;
       padding-top: 16px;
-      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      border-top: 1px solid #edf2f7;
       font-size: 13px;
-      color: #cbd5e0;
+      color: #718096;
     }
 
     .stat-item strong {
-      color: #ffffff;
-      font-size: 16px;
+      color: #3182ce;
+      font-size: 18px;
       margin-right: 2px;
     }
 
@@ -157,75 +191,91 @@
       margin-left: auto;
       font-size: 18px;
       color: #a0aec0;
-      transition: transform 0.2s;
+      transition: transform 0.2s, color 0.2s;
     }
 
     .area-card:hover .card-arrow {
       transform: translateX(4px);
-      color: #ffffff;
+      color: #3182ce;
     }
 
     footer {
       font-size: 12px;
-      color: #a0aec0;
+      color: #718096;
       margin-top: 16px;
+      line-height: 1.6;
+    }
+
+    footer a {
+      color: #3182ce;
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="header-section">
-      <div class="brand-badge">
-        <span>🚌</span>
-        <span>東京都交通局 GTFSオープンデータ対応</span>
+  <!-- 画面上部常時表示お知らせバナー -->
+  <div class="notice-banner" role="alert">
+    <span class="icon">ℹ️</span>
+    <span>
+      <strong>【ご注意】</strong>本サービスは個人が作成した<strong>非公式</strong>のマップ＆時刻表ビューアです（東京都交通局公式ではありません）。定期ダイヤのみ掲載しており、<strong>臨時便には対応しておりません</strong>。
+    </span>
+  </div>
+
+  <div class="main-wrapper">
+    <div class="container">
+      <div class="header-section">
+        <div class="brand-badge">
+          <span>🚌</span>
+          <span>東京都交通局 GTFSオープンデータ対応</span>
+        </div>
+        <h1>東京都営バス マップ＆時刻表</h1>
+        <p class="sub-title">閲覧したいエリアを選択してください。エリアごとに最適化されたデータのみを軽量に読み込みます。</p>
       </div>
-      <h1>東京都営バス マップ＆時刻表</h1>
-      <p class="sub-title">閲覧したいエリアを選択してください。エリアごとに最適化されたデータのみを軽量に読み込みます。</p>
-    </div>
 
-    <div class="card-grid">
-      <!-- 23区エリア -->
-      <a href="map.html?area=23" class="area-card" id="card-23">
-        <div class="area-card-icon">🏙️</div>
-        <div>
-          <div class="area-card-title">
-            <span>23区エリア</span>
-            <span class="area-card-badge">都心部・東部</span>
+      <div class="card-grid">
+        <!-- 23区エリア -->
+        <a href="map.html?area=23" class="area-card" id="card-23">
+          <div class="area-card-icon">🏙️</div>
+          <div>
+            <div class="area-card-title">
+              <span>23区エリア</span>
+              <span class="area-card-badge">都心部・東部</span>
+            </div>
+            <p class="area-card-desc" style="margin-top: 8px;">
+              東京駅、新宿、渋谷、新橋、品川、池袋、江東など、23区全域をカバーする都営バス路線網。
+            </p>
           </div>
-          <p class="area-card-desc" style="margin-top: 6px;">
-            東京駅、新宿、渋谷、新橋、品川、池袋、江東など、23区全域をカバーする都営バス路線網。
-          </p>
-        </div>
-        <div class="area-card-stats">
-          <div class="stat-item"><strong>140</strong> 系統</div>
-          <div class="stat-item"><strong>1,484</strong> 停留所</div>
-          <div class="card-arrow">➔</div>
-        </div>
-      </a>
-
-      <!-- 多摩エリア（青梅） -->
-      <a href="map.html?area=tama" class="area-card tama" id="card-tama">
-        <div class="area-card-icon">⛰️</div>
-        <div>
-          <div class="area-card-title">
-            <span>多摩エリア</span>
-            <span class="area-card-badge">青梅支所管轄</span>
+          <div class="area-card-stats">
+            <div class="stat-item"><strong>140</strong> 系統</div>
+            <div class="stat-item"><strong>1,484</strong> 停留所</div>
+            <div class="card-arrow">➔</div>
           </div>
-          <p class="area-card-desc" style="margin-top: 6px;">
-            青梅駅、東青梅、河辺、吉野、小曽木など、豊かな自然と多摩地域を結ぶ都営バス路線網。
-          </p>
-        </div>
-        <div class="area-card-stats">
-          <div class="stat-item"><strong>10</strong> 系統</div>
-          <div class="stat-item"><strong>189</strong> 停留所</div>
-          <div class="card-arrow">➔</div>
-        </div>
-      </a>
-    </div>
+        </a>
 
-    <footer>
-      &copy; 東京都営バス インタラクティブマップ | 出典: 東京都交通局 GTFSデータ・国土地理院 地図タイル
-    </footer>
+        <!-- 多摩エリア（青梅） -->
+        <a href="map.html?area=tama" class="area-card tama" id="card-tama">
+          <div class="area-card-icon">⛰️</div>
+          <div>
+            <div class="area-card-title">
+              <span>多摩エリア</span>
+              <span class="area-card-badge">青梅支所管轄</span>
+            </div>
+            <p class="area-card-desc" style="margin-top: 8px;">
+              青梅駅、東青梅、河辺、吉野、小曽木など、豊かな自然と多摩地域を結ぶ都営バス路線網。
+            </p>
+          </div>
+          <div class="area-card-stats">
+            <div class="stat-item"><strong>10</strong> 系統</div>
+            <div class="stat-item"><strong>189</strong> 停留所</div>
+            <div class="card-arrow">➔</div>
+          </div>
+        </a>
+      </div>
+
+      <footer>
+        &copy; 東京都営バス インタラクティブマップ (非公式) | 出典: 東京都交通局 GTFSデータ・国土地理院 地図タイル
+      </footer>
+    </div>
   </div>
 </body>
 </html>

@@ -24,13 +24,46 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
       color: #2d3748;
       background: #f7fafc;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 常時表示お知らせバナー */
+    .notice-banner {
+      width: 100%;
+      background-color: #ebf8ff;
+      border-bottom: 1px solid #bee3f8;
+      color: #2b6cb0;
+      padding: 8px 16px;
+      font-size: 12.5px;
+      line-height: 1.4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      text-align: center;
+      font-weight: 500;
+      z-index: 2000;
+      flex-shrink: 0;
+    }
+
+    .notice-banner .icon {
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+
+    .notice-banner strong {
+      color: #2c5282;
+      font-weight: 700;
     }
 
     #app {
       display: flex;
+      flex: 1;
       width: 100%;
       height: 100%;
       position: relative;
+      overflow: hidden;
     }
 
     #map {
@@ -550,6 +583,14 @@
   </style>
 </head>
 <body>
+  <!-- 画面上部常時表示お知らせバナー -->
+  <div class="notice-banner" role="alert">
+    <span class="icon">ℹ️</span>
+    <span>
+      <strong>【ご注意】</strong>本サービスは非公式のマップ＆時刻表ビューアです（東京都交通局公式ではありません）。定期ダイヤのみ掲載しており、<strong>臨時便には対応しておりません</strong>。
+    </span>
+  </div>
+
   <div id="app">
     <!-- Map Container -->
     <div id="map"></div>
@@ -620,9 +661,22 @@
     let routesZip = null;
     let loadedRouteDetails = {}; // route_id -> data
 
-    let currentMode = 'now'; // 'now' or 'custom'
-    let customTimeStr = '12:00';
-    let customDayType = 0; // 0: weekday, 1: saturday, 2: holiday
+    let currentMode = 'now'; // 'now' or 'custom' (デフォルトは今の時刻)
+    // 今の時刻 (HH:MM) と今日の曜日タイプを初期設定
+    function getNowTimeParts() {
+      const now = new Date();
+      const hh = String(now.getHours()).padStart(2, '0');
+      const mm = String(now.getMinutes()).padStart(2, '0');
+      const day = now.getDay(); // 0: Sun, 6: Sat
+      let dayType = 0; // weekday
+      if (day === 6) dayType = 1;
+      else if (day === 0) dayType = 2;
+      return { timeStr: `${hh}:${mm}`, dayType: dayType };
+    }
+
+    const initialNow = getNowTimeParts();
+    let customTimeStr = initialNow.timeStr;
+    let customDayType = initialNow.dayType;
 
     let selectedStopId = null;
     let selectedRouteId = null;
@@ -805,17 +859,7 @@
     // Base Time Logic
     function getEffectiveTime() {
       if (currentMode === 'now') {
-        const now = new Date();
-        const hh = String(now.getHours()).padStart(2, '0');
-        const mm = String(now.getMinutes()).padStart(2, '0');
-        const day = now.getDay(); // 0: Sun, 6: Sat
-        let dayType = 0; // weekday
-        if (day === 6) dayType = 1;
-        else if (day === 0) dayType = 2;
-        return {
-          timeStr: `${hh}:${mm}`,
-          dayType: dayType
-        };
+        return getNowTimeParts();
       } else {
         return {
           timeStr: customTimeStr,
@@ -829,6 +873,22 @@
       document.getElementById('btn-mode-now').classList.toggle('active', mode === 'now');
       document.getElementById('btn-mode-custom').classList.toggle('active', mode === 'custom');
       document.getElementById('custom-time-row').style.display = mode === 'custom' ? 'flex' : 'none';
+
+      // 指定時間モードに切り替えた際、初期値が今の時刻になるよう反映
+      if (mode === 'custom') {
+        const nowParts = getNowTimeParts();
+        const customInput = document.getElementById('input-custom-time');
+        const selectDay = document.getElementById('select-day-type');
+        if (customInput && !customInput.dataset.userModified) {
+          customInput.value = nowParts.timeStr;
+          customTimeStr = nowParts.timeStr;
+        }
+        if (selectDay && !selectDay.dataset.userModified) {
+          selectDay.value = String(nowParts.dayType);
+          customDayType = nowParts.dayType;
+        }
+      }
+
       updateTimeDisplay();
       if (selectedStopId && selectedRouteId) {
         renderTimetable(selectedStopId, selectedRouteId);
@@ -836,7 +896,9 @@
     }
 
     function onCustomTimeChange() {
-      customTimeStr = document.getElementById('input-custom-time').value || '12:00';
+      const inputEl = document.getElementById('input-custom-time');
+      inputEl.dataset.userModified = 'true';
+      customTimeStr = inputEl.value || getNowTimeParts().timeStr;
       updateTimeDisplay();
       if (selectedStopId && selectedRouteId) {
         renderTimetable(selectedStopId, selectedRouteId);
@@ -844,7 +906,9 @@
     }
 
     function onCustomDayChange() {
-      customDayType = parseInt(document.getElementById('select-day-type').value, 10);
+      const selectEl = document.getElementById('select-day-type');
+      selectEl.dataset.userModified = 'true';
+      customDayType = parseInt(selectEl.value, 10);
       updateTimeDisplay();
       if (selectedStopId && selectedRouteId) {
         renderTimetable(selectedStopId, selectedRouteId);
@@ -1259,6 +1323,12 @@
     });
 
     window.addEventListener('DOMContentLoaded', () => {
+      const nowParts = getNowTimeParts();
+      const customInput = document.getElementById('input-custom-time');
+      const selectDay = document.getElementById('select-day-type');
+      if (customInput) customInput.value = nowParts.timeStr;
+      if (selectDay) selectDay.value = String(nowParts.dayType);
+
       initMap();
       loadData();
     });
